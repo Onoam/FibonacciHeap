@@ -6,8 +6,12 @@ package dataStructures;
  */
 public class FibonacciHeap
 {
+   private static int totalLinks;
+   private int potential;
+   private HeapNode min;
+private int size;
 
-   /**
+/**
     * public boolean empty()
     *
     * precondition: none
@@ -51,7 +55,7 @@ public class FibonacciHeap
     */
     public HeapNode findMin()
     {
-    	return new HeapNode(0);// should be replaced by student code
+    	return min
     } 
     
    /**
@@ -73,7 +77,7 @@ public class FibonacciHeap
     */
     public int size()
     {
-    	return 0; // should be replaced by student code
+    	return size; // should be replaced by student code
     }
     	
     /**
@@ -119,7 +123,7 @@ public class FibonacciHeap
     */
     public int potential() 
     {    
-    	return 0; // should be replaced by student code
+    	return potential;
     }
 
    /**
@@ -132,7 +136,7 @@ public class FibonacciHeap
     */
     public static int totalLinks()
     {    
-    	return 0; // should be replaced by student code
+    	return totalLinks;
     }
 
    /**
