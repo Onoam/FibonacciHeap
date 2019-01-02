@@ -55,7 +55,7 @@ private int size;
     */
     public HeapNode findMin()
     {
-    	return min
+    	return min;
     } 
     
    /**
