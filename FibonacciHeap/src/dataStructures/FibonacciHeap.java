@@ -9,12 +9,18 @@ import java.util.LinkedHashSet;
  * An implementation of fibonacci heap over non-negative integers.
  */
 public class FibonacciHeap {
+	private Collection<HeapNode> trees;
 	private static int totalLinks;
 	private static int marks;
 	private int potential;
 	private HeapNode min;
 	private int size;
-
+	
+	/**
+	 * increase marks of the Heap
+	 * used for potential function
+	 * @param i
+	 */
 	private static void increaseMarks(int i) {
 		marks += i;
 	}
@@ -138,7 +144,15 @@ public class FibonacciHeap {
 	public static int totalLinks() {
 		return totalLinks;
 	}
-
+	
+	/**
+	 * 
+	 * @param node the node to check
+	 * @return true iff node is a root of the heap
+	 */
+	private boolean isRoot(HeapNode node) {
+		return trees.contains(node);
+	}
 	/**
 	 * public static int totalCuts()
 	 *
@@ -164,9 +178,15 @@ public class FibonacciHeap {
 		
 		public int key; // TODO Why is this public
 		private boolean mark;
-
-		public HeapNode(int key) {
+		
+		public HeapNode(int key, Collection<HeapNode> children, boolean mark) {
 			this.key = key;
+			this.children = children;
+			this.rank = children.size();
+		}
+		
+		public HeapNode(int key) {
+			this(key, new LinkedHashSet<HeapNode>(), false);
 		}
 
 		public int getKey() {
@@ -186,7 +206,7 @@ public class FibonacciHeap {
 		 * Assumes node is unmarked 
 		 */
 		public void mark() {
-			if (!this.isMarked() && !this.isRoot()){
+			if (!this.isMarked() && !FibonacciHeap.this.isRoot(this)){
 				this.mark = true;
 				FibonacciHeap.increaseMarks(1);
 			}
@@ -217,11 +237,6 @@ public class FibonacciHeap {
 
 		public HeapNode getParent() {
 			return parent;
-		}
-
-		private boolean isRoot() {
-			// TODO Auto-generated method stub
-			return false;
 		}
 
 		public int getRank() {
