@@ -1,7 +1,7 @@
 package dataStructures;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 
 /**
  * FibonacciHeap
@@ -158,12 +158,11 @@ public class FibonacciHeap {
 	 * 
 	 */
 	public class HeapNode {
-		private String info;
 		private HeapNode parent;
 		private int rank; // Needs to be updated only if node is the root of a tree
-		private List<HeapNode> children;
+		private Collection<HeapNode> children;
 		
-		public int key;
+		public int key; // TODO Why is this public
 		private boolean mark;
 
 		public HeapNode(int key) {
@@ -212,19 +211,25 @@ public class FibonacciHeap {
 			this.setParent(null);
 		}
 		
-		/**
-		 * sets this node's new parent
-		 * @param newParent
-		 */
 		private void setParent(HeapNode newParent) {
 			this.parent = newParent;
-			
-			
+		}
+
+		public HeapNode getParent() {
+			return parent;
 		}
 
 		private boolean isRoot() {
 			// TODO Auto-generated method stub
 			return false;
+		}
+
+		public int getRank() {
+			return rank;
+		}
+
+		public void setRank(int rank) {
+			this.rank = rank;
 		}
 	}
 }
