@@ -34,7 +34,7 @@ public class FibonacciHeap {
 	 * 
 	 */
 	public boolean empty() {
-		return false; // should be replaced by student code
+		return this.trees.size() == 0;
 	}
 
 	/**
