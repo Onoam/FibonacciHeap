@@ -10,13 +10,13 @@ import java.util.List;
  */
 public class FibonacciHeap {
 	private static int totalLinks;
+	private static int marks;
 	private int potential;
 	private HeapNode min;
 	private int size;
 
 	private static void increaseMarks(int i) {
-		// TODO Auto-generated method stub
-		
+		marks += i;
 	}
 
 	/**
@@ -159,6 +159,7 @@ public class FibonacciHeap {
 	 */
 	public class HeapNode {
 		private String info;
+		private HeapNode parent;
 		private int rank; // Needs to be updated only if node is the root of a tree
 		private List<HeapNode> children;
 		
@@ -182,14 +183,48 @@ public class FibonacciHeap {
 		}
 		
 		/**
-		 * Mark the current node
+		 * Mark the current node, if it's not a root node
 		 * Assumes node is unmarked 
 		 */
 		public void mark() {
-			if (!this.isMarked()){
+			if (!this.isMarked() && !this.isRoot()){
 				this.mark = true;
 				FibonacciHeap.increaseMarks(1);
 			}
+		}
+		
+		/**
+		 * Cuts the child from the parent, so that it can be added to the root list
+		 * assumes this == child.parent
+		 * @param child
+		 * @return child
+		 */
+		public HeapNode cut(HeapNode child) {
+			this.children.remove(child);
+			child.removeParent();
+			return child;
+		}
+		
+		/**
+		 * remove's this node's parent
+		 */
+		private void removeParent() {
+			this.setParent(null);
+		}
+		
+		/**
+		 * sets this node's new parent
+		 * @param newParent
+		 */
+		private void setParent(HeapNode newParent) {
+			this.parent = newParent;
+			
+			
+		}
+
+		private boolean isRoot() {
+			// TODO Auto-generated method stub
+			return false;
 		}
 	}
 }
