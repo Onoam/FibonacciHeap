@@ -1,7 +1,7 @@
 package dataStructures;
 
 import java.util.Collection;
-import java.util.LinkedHashSet;
+import java.util.LinkedList;
 
 /**
  * FibonacciHeap
@@ -186,7 +186,7 @@ public class FibonacciHeap {
 		}
 		
 		public HeapNode(int key) {
-			this(key, new LinkedHashSet<HeapNode>(), false);
+			this(key, new LinkedList<HeapNode>(), false);
 		}
 
 		public int getKey() {
