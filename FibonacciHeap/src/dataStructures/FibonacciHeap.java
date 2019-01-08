@@ -426,7 +426,7 @@ public class FibonacciHeap {
 	 * A self implemented list to contain HeapNodes 
 	 *
 	 */
-	public class HeapList implements Iterable<HeapList>{
+	public class HeapList implements Iterable<HeapNode>{
 		private int size;
 		private HeapNode first;
 		private HeapNode last;
@@ -447,7 +447,7 @@ public class FibonacciHeap {
 			
 		}
 		@Override
-		public Iterator<HeapList> iterator() {
+		public Iterator<HeapNode> iterator() {
 			// TODO Auto-generated method stub
 			return null;
 		}
