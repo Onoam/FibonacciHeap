@@ -1,7 +1,6 @@
+package dataStructures;
 
-import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * FibonacciHeap
@@ -12,7 +11,7 @@ public class FibonacciHeap {
 	private LinkedList<HeapNode> trees;
 	private static int totalLinks;
 	private static int totalCuts;
-	private int marks;
+	private static int marks;
 	private HeapNode min;
 	private int size;
 	private int numberOfTrees;//Roee: the size of the list trees
@@ -58,7 +57,7 @@ public class FibonacciHeap {
 	 * used for potential function
 	 * @param i
 	 */
-	private void increaseMarks(int i) {
+	private static void increaseMarks(int i) {
 		marks += i;
 	}
 
@@ -421,5 +420,15 @@ public class FibonacciHeap {
 		public void setRank(int rank) {
 			this.rank = rank;
 		}
+	}
+	/**
+	 * A self implemented list to contain HeapNodes 
+	 *
+	 */
+	public class HeapList{
+		private int size;
+		private HeapNode first;
+		private HeapNode last;
+		
 	}
 }
