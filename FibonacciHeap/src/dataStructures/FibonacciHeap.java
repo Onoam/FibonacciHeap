@@ -1,7 +1,7 @@
-package dataStructures;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * FibonacciHeap
@@ -9,19 +9,56 @@ import java.util.LinkedList;
  * An implementation of fibonacci heap over non-negative integers.
  */
 public class FibonacciHeap {
-	private Collection<HeapNode> trees;
+	private LinkedList<HeapNode> trees;
 	private static int totalLinks;
-	private static int marks;
-	private int potential;
+	private static int totalCuts;
+	private int marks;
 	private HeapNode min;
 	private int size;
+	private int numberOfTrees;//Roee: the size of the list trees
+	
+	public static void main(String[] args){
+		System.out.println("project");
+		deleteMinTests();
+		
+		
+	}
+	public static void deleteMinTests(){
+		FibonacciHeap fib = new FibonacciHeap();
+		fib.insert(14);
+		fib.insert(30);
+		fib.insert(5);
+		fib.insert(9);
+		fib.insert(3);
+		fib.insert(21);
+		fib.insert(50);
+		fib.insert(19);
+		fib.printRootKeys();
+		fib.deleteMin();
+		fib.printRootKeys();
+		fib.deleteMin();
+		fib.printRootKeys();
+		System.out.println("");
+		
+	}
+	public void printRootKeys(){
+		for(HeapNode node: this.trees){
+			System.out.print(node.key+"("+node.rank+")"+"\t");
+		}
+		System.out.println("size:"+this.size+" minkey:"+this.min.key);
+		//System.out.print("\n");
+	}
+	public FibonacciHeap(){
+		this.trees = new LinkedList<>();
+		this.min = new HeapNode(Integer.MAX_VALUE);
+	}
 	
 	/**
 	 * increase marks of the Heap
 	 * used for potential function
 	 * @param i
 	 */
-	private static void increaseMarks(int i) {
+	private void increaseMarks(int i) {
 		marks += i;
 	}
 
@@ -44,7 +81,15 @@ public class FibonacciHeap {
 	 * it into the heap.
 	 */
 	public HeapNode insert(int key) {
-		return new HeapNode(key); // should be replaced by student code
+		HeapNode newNode = new HeapNode(key);
+		newNode.rank=0;
+		this.trees.add(newNode);
+		this.numberOfTrees++;
+		this.size++;
+		this.min=chooseTheSmallerNode(this.min,newNode);
+		
+		
+		return newNode;
 	}
 
 	/**
@@ -53,10 +98,138 @@ public class FibonacciHeap {
 	 * Delete the node containing the minimum key.
 	 *
 	 */
-	public void deleteMin() {
-		return; // should be replaced by student code
-
+	public void deleteMin()
+    {
+		//##part I
+    	if (this.empty()){
+    		return;
+    	}
+    	if(this.size()==1){
+    		emptyTheHeap();
+    		return;
+    	}
+    	removeMinNodeAndUpgradeItsChildren();
+    	
+    	//this.printRootKeys();
+    	
+    	//##part II
+    	double boundingRatio=1.4404;
+    	double maxTreeRank = (Math.log(this.size())/Math.log(2))*boundingRatio;
+    	//according to slide 84 the maximal tree rank is bounded by maxTreeRank
+    	int roundedMaxTreeRank = (int) Math.floor(maxTreeRank)+1;
+    	HeapNode[] Bins = new HeapNode[roundedMaxTreeRank];
+    	successiveLinking(Bins);
+    	
+    	//##part III
+    	UpdateNewRootsAndMinNode(Bins);
+    	
+    	
+     	return; // should be replaced by student code
+     	
+    }
+	
+	public void emptyTheHeap(){
+		
+		this.trees = new LinkedList<>();
+		this.marks = 0;
+		this.size=0;
+		min = null;
+		this.numberOfTrees=0;
 	}
+    /**slide 37
+     * removing the minimal node from the list trees and upgrading it's list of children
+     * to be new roots
+     * Notice!: the field min becomes null after calling thing function
+     * **/
+    public void removeMinNodeAndUpgradeItsChildren(){
+    	
+    	
+    	HeapNode minNode = this.min;
+    	
+    	int numberOfChildren = minNode.children.size();
+    	this.trees.remove(minNode);
+    	for(HeapNode child :minNode.children){
+    		child.parent=null;
+    		this.trees.add(child);
+    	}
+    	this.min=null;
+    	this.size--;
+    	this.numberOfTrees=this.numberOfTrees-1+numberOfChildren;
+    	
+    }
+    public void successiveLinking(HeapNode[]Bins){
+    	for(HeapNode root:this.trees){
+    		continuousAddition(Bins,root,root.rank);
+    		
+    	}
+    }
+    public void continuousAddition(HeapNode[]Bins,HeapNode root,int index){
+    	if(Bins[index]==null){
+    		Bins[index]=root;
+    		return;
+    	}
+    	continuousAddition(Bins,linkTrees(root,Bins[index]),index+1);
+    	Bins[index]=null;
+    	
+    	
+    }
+    /**slide 12
+     * @pre trees contains root1 and root2
+     * returns the new root of the new tree**/
+    public HeapNode linkTrees(HeapNode root1,HeapNode root2){
+    	if(root1.rank!=root2.rank){
+    		System.out.print("problem! trying to link unmatched ranks");
+    		return null;
+    	}
+    	HeapNode smallRoot;
+		HeapNode bigRoot;
+    	if (root1.key<=root2.key){
+    		 smallRoot=root1;
+    		 bigRoot=root2;
+    	}
+    	else{
+    		 smallRoot=root2;
+    		 bigRoot=root1;
+    	}
+    	/*
+    	 * needed only if we link to withing the successive linking proccess:
+    	this.trees.remove(bigRoot);
+    	this.numberOfTrees--;
+    	*/
+    	smallRoot.children.add(bigRoot);
+    	bigRoot.parent=smallRoot;
+    	smallRoot.rank++;
+    	totalLinks++;
+    	return smallRoot;
+    }
+    public void UpdateNewRootsAndMinNode(HeapNode[] bins){
+    	
+    	boolean searchForMin=this.min==null;
+    	HeapNode tmpMin = new HeapNode(Integer.MAX_VALUE);
+    	
+    	this.trees = new LinkedList<>();
+    	this.numberOfTrees=0;
+    	for(int i=0;i<bins.length;i++){
+    		if(bins[i]!=null){
+    			bins[i].parent=null;
+    			this.trees.add(bins[i]);
+    			numberOfTrees++;
+    			if(searchForMin){
+    				tmpMin=chooseTheSmallerNode(tmpMin,bins[i]);
+    			}
+    		}
+    	}
+    	if(searchForMin){
+    		this.min=tmpMin;
+    	}
+    	
+    }
+    public HeapNode chooseTheSmallerNode(HeapNode a,HeapNode b){
+    	if(a.key<=b.key){
+    		return a;
+    	}
+    	return b;
+    }
 
 	/**
 	 * public HeapNode findMin()
@@ -107,7 +280,9 @@ public class FibonacciHeap {
 	 * TODO should probably implement this with decreaseKey+deleteMin
 	 */
 	public void delete(HeapNode x) {
-		return; // should be replaced by student code
+		this.decreaseKey(x,x.key-(this.min.key-1));
+		this.deleteMin();
+		return;
 	}
 
 	/**
@@ -129,7 +304,7 @@ public class FibonacciHeap {
 	 * plus twice the number of marked nodes in the heap.
 	 */
 	public int potential() {
-		return potential;
+		return this.numberOfTrees+2*this.marks;
 	}
 
 	/**
@@ -173,13 +348,13 @@ public class FibonacciHeap {
 	 */
 	public class HeapNode {
 		private HeapNode parent;
-		private int rank; // Needs to be updated only if node is the root of a tree
-		private Collection<HeapNode> children;
+		private int rank=0; // Needs to be updated only if node is the root of a tree
+		private LinkedList<HeapNode> children;
 		
 		public int key; // TODO Why is this public
 		private boolean mark;
 		
-		public HeapNode(int key, Collection<HeapNode> children, boolean mark) {
+		public HeapNode(int key, LinkedList<HeapNode> children, boolean mark) {
 			this.key = key;
 			this.children = children;
 			this.rank = children.size();
