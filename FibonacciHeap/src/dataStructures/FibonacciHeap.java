@@ -1,7 +1,6 @@
 package dataStructures;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 
 /**
  * FibonacciHeap
@@ -348,21 +347,23 @@ public class FibonacciHeap {
 	 */
 	public class HeapNode {
 		private HeapNode parent;
-		private int rank=0; // Needs to be updated only if node is the root of a tree
+		private int rank = 0; // Needs to be updated only if node is the root of a tree
 		private HeapList children;
-private HeapNode next;
-private HeapNode prev;
+		private HeapNode next;
+		private HeapNode prev;
 		public int key; // TODO Why is this public
 		private boolean mark;
 		
-		public HeapNode(int key, HeapList children, boolean mark) {
+		public HeapNode(int key, HeapList children, boolean mark, HeapNode next, HeapNode prev) {
 			this.key = key;
 			this.children = children;
 			this.rank = children.size();
+			this.next = next;
+			this.prev = prev;
 		}
 		
 		public HeapNode(int key) {
-			this(key, new HeapList(), false);
+			this(key, new HeapList(), false, null, null);
 		}
 
 		public int getKey() {
@@ -422,36 +423,153 @@ private HeapNode prev;
 		public void setRank(int rank) {
 			this.rank = rank;
 		}
+		
+		private HeapNode getNext() {
+			return next;
+		}
+		
+		private void setNext(HeapNode next) {
+			this.next = next;
+		}
+		
+		private HeapNode getPrev() {
+			return prev;
+		}
+		
+		private void setPrev(HeapNode prev) {
+			this.prev = prev;
+		}
 	}
 	/**
 	 * A self implemented list to contain HeapNodes 
 	 *
 	 */
 	public class HeapList implements Iterable<HeapNode>{
-		private int size;
+		/*
+		 * listSize=0 iff first=last=null
+		 */
+		private int listSize;
 		private HeapNode first;
 		private HeapNode last;
+		
+		public HeapList() {
+			listSize = 0;
+			first = last = null;
+		}
+
 		public int size() {
-			// TODO Auto-generated method stub
-			return 0;
+			return listSize;
 		}
 		public boolean contains(HeapNode node) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-		public void remove(HeapNode minNode) {
-			// TODO Auto-generated method stub
-			
-		}
-		public void add(HeapNode newNode) {
-			// TODO Auto-generated method stub
-			
-		}
-		@Override
-		public Iterator<HeapNode> iterator() {
-			// TODO Auto-generated method stub
-			return null;
+			if (node==first || node==last)
+				return true;
+			else // at least 3 nodes in list
+			{
+				HeapNode current = first.getNext();
+				while (current!=last)
+				{
+					if (current==node)
+						return true;
+					current = current.getNext();
+				}
+				return false;
+			}
 		}
 		
+		/**
+		 * Removes node from list
+		 */
+		public void remove(HeapNode node) {
+			HeapNode nextNode = node.getNext();
+			HeapNode prevNode = node.getPrev();
+			nextNode.setPrev(prevNode);
+			prevNode.setNext(nextNode);
+			node.setNext(null);
+			node.setPrev(null);
+			if (listSize==1)
+			{
+				first = last = null;
+			}
+			else
+			{
+				if (node==first)
+					first = nextNode;
+				else if (node==last)
+					last = prevNode;
+			}
+			decSize();
+		}
+		
+		private void decSize() {
+			if (listSize>0)
+				listSize--;
+			else
+				System.out.println("invalid decSize() call");
+		}
+
+		/**
+		 * Inserts newNode at the end of list
+		 */
+		public void add(HeapNode newNode) {
+			if (listSize==0)
+			{
+				newNode.setNext(newNode);
+				newNode.setPrev(newNode);
+				first = last = newNode;
+			}
+			else
+			{
+				newNode.setNext(first);
+				newNode.setPrev(last);
+				first.setPrev(newNode);
+				last.setNext(newNode);
+				last = newNode;
+			}
+			incSize();
+		}
+		
+		private void incSize() {
+			listSize++;
+		}
+
+		@Override
+		public Iterator<HeapNode> iterator() {
+			return new HeapListIterator();
+		}
+		
+		public class HeapListIterator implements Iterator<HeapNode>
+		{
+			private HeapNode nextNode;
+			private boolean firstIteration;
+			
+			public HeapListIterator() {
+				nextNode = first;
+				firstIteration = true;
+			}
+
+			@Override
+			public boolean hasNext() {
+				if (listSize>0)
+				{
+					if (firstIteration) // always return first item
+					{
+						firstIteration = false;
+						return true;
+					}
+					return nextNode != first;
+				}
+				else
+					return false;
+			}
+
+			@Override
+			public HeapNode next() {
+				HeapNode current = nextNode;
+				nextNode = nextNode.getNext();
+				return current;
+			}
+			
+			public void remove() { throw new UnsupportedOperationException(); }
+		}
 	}
 }
