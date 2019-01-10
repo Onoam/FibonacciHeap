@@ -1,4 +1,4 @@
-
+package dataStructures;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +12,7 @@ public class FibonacciHeap {
 	private LinkedList<HeapNode> trees;
 	private static int totalLinks;
 	private static int totalCuts;
-	private int marks;
+	private static int marks;
 	private HeapNode min;
 	private int size;
 	private int numberOfTrees;//Roee: the size of the list trees
@@ -58,7 +58,7 @@ public class FibonacciHeap {
 	 * used for potential function
 	 * @param i
 	 */
-	private void increaseMarks(int i) {
+	private static void increaseMarks(int i) {
 		marks += i;
 	}
 
@@ -269,10 +269,22 @@ public class FibonacciHeap {
 	 * 
 	 */
 	public int[] countersRep() {
-		int[] arr = new int[42];
+		int[] arr = new int[getMaxRank()];
+		for (HeapNode node : trees) 
+			arr[node.getRank()] += 1;
 		return arr; // to be replaced by student code
 	}
-
+	/**
+	 * Finds the highest rank of a root in the heap
+	 * @return Max rank of tree in the heap's roots
+	 */
+	private int getMaxRank() {
+		int max = 0;
+		for (HeapNode node : trees) {
+			max = Math.max(node.getRank(), max);
+		}
+		return max;
+	}
 	/**
 	 * public void delete(HeapNode x)
 	 *
