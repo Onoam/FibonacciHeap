@@ -1,7 +1,7 @@
+package dataStructures;
 
-import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * FibonacciHeap
@@ -9,10 +9,10 @@ import java.util.List;
  * An implementation of fibonacci heap over non-negative integers.
  */
 public class FibonacciHeap {
-	private LinkedList<HeapNode> trees;
+	private HeapList trees;
 	private static int totalLinks;
 	private static int totalCuts;
-	private int marks;
+	private static int marks;
 	private HeapNode min;
 	private int size;
 	private int numberOfTrees;//Roee: the size of the list trees
@@ -49,7 +49,7 @@ public class FibonacciHeap {
 		//System.out.print("\n");
 	}
 	public FibonacciHeap(){
-		this.trees = new LinkedList<>();
+		this.trees = new HeapList();
 		this.min = new HeapNode(Integer.MAX_VALUE);
 	}
 	
@@ -58,7 +58,7 @@ public class FibonacciHeap {
 	 * used for potential function
 	 * @param i
 	 */
-	private void increaseMarks(int i) {
+	private static void increaseMarks(int i) {
 		marks += i;
 	}
 
@@ -130,8 +130,8 @@ public class FibonacciHeap {
 	
 	public void emptyTheHeap(){
 		
-		this.trees = new LinkedList<>();
-		this.marks = 0;
+		this.trees = new HeapList();
+		marks = 0;
 		this.size=0;
 		min = null;
 		this.numberOfTrees=0;
@@ -207,7 +207,7 @@ public class FibonacciHeap {
     	boolean searchForMin=this.min==null;
     	HeapNode tmpMin = new HeapNode(Integer.MAX_VALUE);
     	
-    	this.trees = new LinkedList<>();
+    	this.trees = new HeapList();
     	this.numberOfTrees=0;
     	for(int i=0;i<bins.length;i++){
     		if(bins[i]!=null){
@@ -304,7 +304,7 @@ public class FibonacciHeap {
 	 * plus twice the number of marked nodes in the heap.
 	 */
 	public int potential() {
-		return this.numberOfTrees+2*this.marks;
+		return this.numberOfTrees+2*marks;
 	}
 
 	/**
@@ -349,19 +349,20 @@ public class FibonacciHeap {
 	public class HeapNode {
 		private HeapNode parent;
 		private int rank=0; // Needs to be updated only if node is the root of a tree
-		private LinkedList<HeapNode> children;
-		
+		private HeapList children;
+private HeapNode next;
+private HeapNode prev;
 		public int key; // TODO Why is this public
 		private boolean mark;
 		
-		public HeapNode(int key, LinkedList<HeapNode> children, boolean mark) {
+		public HeapNode(int key, HeapList children, boolean mark) {
 			this.key = key;
 			this.children = children;
 			this.rank = children.size();
 		}
 		
 		public HeapNode(int key) {
-			this(key, new LinkedList<HeapNode>(), false);
+			this(key, new HeapList(), false);
 		}
 
 		public int getKey() {
@@ -421,5 +422,36 @@ public class FibonacciHeap {
 		public void setRank(int rank) {
 			this.rank = rank;
 		}
+	}
+	/**
+	 * A self implemented list to contain HeapNodes 
+	 *
+	 */
+	public class HeapList implements Iterable<HeapNode>{
+		private int size;
+		private HeapNode first;
+		private HeapNode last;
+		public int size() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+		public boolean contains(HeapNode node) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+		public void remove(HeapNode minNode) {
+			// TODO Auto-generated method stub
+			
+		}
+		public void add(HeapNode newNode) {
+			// TODO Auto-generated method stub
+			
+		}
+		@Override
+		public Iterator<HeapNode> iterator() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
 	}
 }
