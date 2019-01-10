@@ -350,7 +350,8 @@ public class FibonacciHeap {
 		private HeapNode parent;
 		private int rank=0; // Needs to be updated only if node is the root of a tree
 		private HeapList children;
-		
+private HeapNode next;
+private HeapNode prev;
 		public int key; // TODO Why is this public
 		private boolean mark;
 		
