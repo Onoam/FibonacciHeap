@@ -378,7 +378,42 @@ public class FibonacciHeap {
 	 * procedure should be applied if needed).
 	 */
 	public void decreaseKey(HeapNode x, int delta) {
+		HeapNode parent = x.getParent();
+		x.setKey(x.getKey()-delta);
+		if (parent != null && x.getKey() < parent.getKey()) {
+			cut(parent, x);
+			x.unmark();
+			cascadingCuts(parent);
+		}
+		if (x.getKey() < findMin().getKey()) {
+			this.min = x;
+		}
 		return; // should be replaced by student code
+	}
+
+	private void cascadingCuts(HeapNode y) {
+		HeapNode z = y.getParent();
+		if (z != null) {
+			if (!y.isMarked()) {
+				y.mark();
+			}
+			else {
+				cut(z, y);
+				cascadingCuts(z);
+			}
+		}		
+	}
+	/**
+	 * Cuts child from parent, adding the child to the list of roots.
+	 * @param parent
+	 * @param child
+	 */
+	private void cut(HeapNode parent, HeapNode child) {
+		parent.cut(child);
+		trees.add(child);
+		child.unmark();
+		FibonacciHeap.increaseCuts(1);
+		
 	}
 
 	/**
@@ -421,7 +456,12 @@ public class FibonacciHeap {
 	 * diconnects a subtree from its parent (during decreaseKey/delete methods).
 	 */
 	public static int totalCuts() {
-		return 0; // should be replaced by student code
+		return totalCuts; // should be replaced by student code
+	}
+
+	public static void increaseCuts(int i) {
+		totalCuts += i;
+		
 	}
 
 	/**
@@ -446,6 +486,16 @@ public class FibonacciHeap {
 			this.rank = children.size();
 			this.next = next;
 			this.prev = prev;
+		}
+
+		public void unmark() {
+			this.mark = false;
+			
+		}
+
+		public void setKey(int i) {
+			this.key = i;
+			
 		}
 
 		public HeapNode(int key) {
@@ -476,15 +526,14 @@ public class FibonacciHeap {
 		}
 
 		/**
-		 * Cuts the child from the parent, so that it can be added to the root list
+		 * Cuts the child from the parent
 		 * assumes this == child.parent
 		 * @param child
 		 * @return child
 		 */
-		public HeapNode cut(HeapNode child) {
+		public void cut(HeapNode child) {
 			this.children.remove(child);
 			child.removeParent();
-			return child;
 		}
 
 		/**
