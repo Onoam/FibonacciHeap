@@ -16,12 +16,12 @@ public class FibonacciHeap {
 	private HeapNode min;
 	private int size;
 	private int numberOfTrees;//Roee: the size of the list trees
-	
+
 	public static void main(String[] args){
 		System.out.println("project");
 		deleteMinTests();
-		
-		
+
+
 	}
 	public static void deleteMinTests(){
 		FibonacciHeap fib = new FibonacciHeap();
@@ -39,7 +39,7 @@ public class FibonacciHeap {
 		fib.deleteMin();
 		fib.printRootKeys();
 		System.out.println("");
-		
+
 	}
 	public void printRootKeys(){
 		for(HeapNode node: this.trees){
@@ -52,7 +52,7 @@ public class FibonacciHeap {
 		this.trees = new HeapList();
 		this.min = new HeapNode(Integer.MAX_VALUE);
 	}
-	
+
 	/**
 	 * increase marks of the Heap
 	 * used for potential function
@@ -66,9 +66,9 @@ public class FibonacciHeap {
 	 * public boolean empty()
 	 *
 	 * precondition: none
-	 * 
+	 *
 	 * The method returns true if and only if the heap is empty.
-	 * 
+	 *
 	 */
 	public boolean empty() {
 		return this.trees.size() == 0;
@@ -87,8 +87,8 @@ public class FibonacciHeap {
 		this.numberOfTrees++;
 		this.size++;
 		this.min=chooseTheSmallerNode(this.min,newNode);
-		
-		
+
+
 		return newNode;
 	}
 
@@ -109,9 +109,9 @@ public class FibonacciHeap {
     		return;
     	}
     	removeMinNodeAndUpgradeItsChildren();
-    	
+
     	//this.printRootKeys();
-    	
+
     	//##part II
     	double boundingRatio=1.4404;
     	double maxTreeRank = (Math.log(this.size())/Math.log(2))*boundingRatio;
@@ -119,17 +119,17 @@ public class FibonacciHeap {
     	int roundedMaxTreeRank = (int) Math.floor(maxTreeRank)+1;
     	HeapNode[] Bins = new HeapNode[roundedMaxTreeRank];
     	successiveLinking(Bins);
-    	
+
     	//##part III
     	UpdateNewRootsAndMinNode(Bins);
-    	
-    	
+
+
      	return; // should be replaced by student code
-     	
+
     }
-	
+
 	public void emptyTheHeap(){
-		
+
 		this.trees = new HeapList();
 		marks = 0;
 		this.size=0;
@@ -142,10 +142,10 @@ public class FibonacciHeap {
      * Notice!: the field min becomes null after calling thing function
      * **/
     public void removeMinNodeAndUpgradeItsChildren(){
-    	
-    	
+
+
     	HeapNode minNode = this.min;
-    	
+
     	int numberOfChildren = minNode.children.size();
     	this.trees.remove(minNode);
     	for(HeapNode child :minNode.children){
@@ -155,12 +155,12 @@ public class FibonacciHeap {
     	this.min=null;
     	this.size--;
     	this.numberOfTrees=this.numberOfTrees-1+numberOfChildren;
-    	
+
     }
     public void successiveLinking(HeapNode[]Bins){
     	for(HeapNode root:this.trees){
     		continuousAddition(Bins,root,root.rank);
-    		
+
     	}
     }
     public void continuousAddition(HeapNode[]Bins,HeapNode root,int index){
@@ -170,8 +170,8 @@ public class FibonacciHeap {
     	}
     	continuousAddition(Bins,linkTrees(root,Bins[index]),index+1);
     	Bins[index]=null;
-    	
-    	
+
+
     }
     /**slide 12
      * @pre trees contains root1 and root2
@@ -203,10 +203,10 @@ public class FibonacciHeap {
     	return smallRoot;
     }
     public void UpdateNewRootsAndMinNode(HeapNode[] bins){
-    	
+
     	boolean searchForMin=this.min==null;
     	HeapNode tmpMin = new HeapNode(Integer.MAX_VALUE);
-    	
+
     	this.trees = new HeapList();
     	this.numberOfTrees=0;
     	for(int i=0;i<bins.length;i++){
@@ -222,7 +222,7 @@ public class FibonacciHeap {
     	if(searchForMin){
     		this.min=tmpMin;
     	}
-    	
+
     }
     public HeapNode chooseTheSmallerNode(HeapNode a,HeapNode b){
     	if(a.key<=b.key){
@@ -255,7 +255,7 @@ public class FibonacciHeap {
 	 * public int size()
 	 *
 	 * Return the number of elements in the heap
-	 * 
+	 *
 	 */
 	public int size() {
 		return size; // should be replaced by student code
@@ -266,13 +266,25 @@ public class FibonacciHeap {
 	 *
 	 * Return a counters array, where the value of the i-th entry is the number of
 	 * trees of order i in the heap.
-	 * 
+	 *
 	 */
 	public int[] countersRep() {
-		int[] arr = new int[42];
+		int[] arr = new int[getMaxRank()];
+		for (HeapNode node : trees)
+			arr[node.getRank()] += 1;
 		return arr; // to be replaced by student code
 	}
-
+	/**
+	 * Finds the highest rank of a root in the heap
+	 * @return Max rank of tree in the heap's roots
+	 */
+	private int getMaxRank() {
+		int max = 0;
+		for (HeapNode node : trees) {
+			max = Math.max(node.getRank(), max);
+		}
+		return max;
+	}
 	/**
 	 * public void delete(HeapNode x)
 	 *
@@ -319,9 +331,9 @@ public class FibonacciHeap {
 	public static int totalLinks() {
 		return totalLinks;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param node the node to check
 	 * @return true iff node is a root of the heap
 	 */
@@ -341,10 +353,10 @@ public class FibonacciHeap {
 
 	/**
 	 * public class HeapNode
-	 * 
+	 *
 	 * If you wish to implement classes other than FibonacciHeap (for example
 	 * HeapNode), do it in this file, not in another file
-	 * 
+	 *
 	 */
 	public class HeapNode {
 		private HeapNode parent;
@@ -354,13 +366,13 @@ private HeapNode next;
 private HeapNode prev;
 		public int key; // TODO Why is this public
 		private boolean mark;
-		
+
 		public HeapNode(int key, HeapList children, boolean mark) {
 			this.key = key;
 			this.children = children;
 			this.rank = children.size();
 		}
-		
+
 		public HeapNode(int key) {
 			this(key, new HeapList(), false);
 		}
@@ -368,7 +380,7 @@ private HeapNode prev;
 		public int getKey() {
 			return this.key;
 		}
-		
+
 		/**
 		 * check if node is marked, for cascading cuts
 		 * @return
@@ -376,10 +388,10 @@ private HeapNode prev;
 		public boolean isMarked() {
 			return mark;
 		}
-		
+
 		/**
 		 * Mark the current node, if it's not a root node
-		 * Assumes node is unmarked 
+		 * Assumes node is unmarked
 		 */
 		public void mark() {
 			if (!this.isMarked() && !FibonacciHeap.this.isRoot(this)){
@@ -387,7 +399,7 @@ private HeapNode prev;
 				FibonacciHeap.increaseMarks(1);
 			}
 		}
-		
+
 		/**
 		 * Cuts the child from the parent, so that it can be added to the root list
 		 * assumes this == child.parent
@@ -399,14 +411,14 @@ private HeapNode prev;
 			child.removeParent();
 			return child;
 		}
-		
+
 		/**
 		 * remove's this node's parent
 		 */
 		private void removeParent() {
 			this.setParent(null);
 		}
-		
+
 		private void setParent(HeapNode newParent) {
 			this.parent = newParent;
 		}
@@ -424,7 +436,7 @@ private HeapNode prev;
 		}
 	}
 	/**
-	 * A self implemented list to contain HeapNodes 
+	 * A self implemented list to contain HeapNodes
 	 *
 	 */
 	public class HeapList implements Iterable<HeapNode>{
@@ -441,17 +453,17 @@ private HeapNode prev;
 		}
 		public void remove(HeapNode minNode) {
 			// TODO Auto-generated method stub
-			
+
 		}
 		public void add(HeapNode newNode) {
 			// TODO Auto-generated method stub
-			
+
 		}
 		@Override
 		public Iterator<HeapNode> iterator() {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
+
 	}
 }
