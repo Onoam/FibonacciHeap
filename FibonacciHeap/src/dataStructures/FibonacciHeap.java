@@ -18,8 +18,44 @@ public class FibonacciHeap {
 	
 	public static void main(String[] args){
 		System.out.println("project");
-		deleteMinTests();
+		//deleteMinTests();
+		generalTest();
+	}
+	
+	public static void generalTest() {
+		FibonacciHeap fib = new FibonacciHeap();
+		fib.insert(14);
+		fib.insert(30);
+		fib.insert(5);
+		fib.insert(9);
+		fib.insert(3);
+		fib.insert(21);
+		fib.insert(50);
+		fib.insert(19);
+		System.out.println("fib");
+		fib.printRootKeys();
 		
+		// countersRep with deleteMin test
+		countersRepTest(fib);
+		
+		// meld test
+		FibonacciHeap fib2 = new FibonacciHeap();
+		fib2.insert(1);
+		fib2.insert(15);
+		fib2.insert(11);
+		fib2.insert(20);
+		fib2.insert(34);
+		fib2.deleteMin();
+		
+		System.out.println("fib2");
+		fib2.printRootKeys();
+		printCountersRep(fib2);
+		System.out.println("");
+		
+		fib.meld(fib2);
+		System.out.println("fib after meld");
+		fib.printRootKeys();
+		printCountersRep(fib);
 	}
 	
 	public static void deleteMinTests(){
@@ -33,17 +69,26 @@ public class FibonacciHeap {
 		fib.insert(50);
 		fib.insert(19);
 		fib.printRootKeys();
-		contersRepTest(fib);
 		fib.deleteMin();
 		fib.printRootKeys();
-		contersRepTest(fib);
 		fib.deleteMin();
 		fib.printRootKeys();
-		contersRepTest(fib);
 		System.out.println("");
 		
 	}
-	private static void contersRepTest(FibonacciHeap fib) {
+	
+	private static void countersRepTest(FibonacciHeap fib) {
+		printCountersRep(fib);
+		fib.deleteMin();
+		fib.printRootKeys();
+		printCountersRep(fib);
+		fib.deleteMin();
+		fib.printRootKeys();
+		printCountersRep(fib);
+		System.out.println("");
+	}
+	
+	private static void printCountersRep(FibonacciHeap fib) {
 		int[] countersRepArr = fib.countersRep();
 		for (int i = 0; i < countersRepArr.length; i++) {
 			System.out.print("Rank "+ i +": " + countersRepArr[i] + " tree(s)");
@@ -52,6 +97,7 @@ public class FibonacciHeap {
 		}
 		System.out.println("");
 	}
+	
 	public void printRootKeys(){
 		for(HeapNode node: this.trees){
 			System.out.print(node.key+"("+node.rank+")"+"\t");
@@ -59,6 +105,11 @@ public class FibonacciHeap {
 		System.out.println("size:"+this.size+" minkey:"+this.min.key);
 		//System.out.print("\n");
 	}
+	
+	private static void printHeap(FibonacciHeap heap) {
+		
+	}
+	
 	public FibonacciHeap(){
 		this.trees = new HeapList();
 		this.min = new HeapNode(Integer.MAX_VALUE);
@@ -259,7 +310,16 @@ public class FibonacciHeap {
 	 *
 	 */
 	public void meld(FibonacciHeap heap2) {
-		return; // should be replaced by student code
+		if (heap2.size()>0)
+		{
+			this.trees.concat(heap2.trees); // concatenate two lists
+			increaseSize(heap2.size()); // update num of nodes
+			this.min = chooseTheSmallerNode(min, heap2.min); // update min
+		}
+	}
+
+	private void increaseSize(int size2) {
+		this.size += size2;
 	}
 
 	/**
@@ -483,9 +543,25 @@ public class FibonacciHeap {
 			first = last = null;
 		}
 
+		/**
+		 * concatenating list2 at the end of current list in O(1) in WC
+		 * @pre list2.size()>0
+		 */
+		public void concat(HeapList list2) {
+			this.last.setNext(list2.first);
+			this.first.setPrev(list2.last);
+			list2.first.setPrev(this.last);
+			list2.last.setNext(this.first);
+			
+			this.last = list2.last; // update last
+			
+			this.listSize += list2.size(); // update number of trees in trees list
+		}
+
 		public int size() {
 			return listSize;
 		}
+		
 		public boolean contains(HeapNode node) {
 			if (node==first || node==last)
 				return true;
