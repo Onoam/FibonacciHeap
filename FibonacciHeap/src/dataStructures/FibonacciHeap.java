@@ -1,4 +1,4 @@
-//package dataStructures; ### remove comment before merging to master!!! ###
+package dataStructures;
 
 import java.util.Iterator;
 
