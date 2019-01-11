@@ -1,4 +1,4 @@
-package dataStructures;
+//package dataStructures; ### remove comment before merging to master!!! ###
 
 import java.util.Iterator;
 
@@ -20,8 +20,8 @@ public class FibonacciHeap {
 		System.out.println("project");
 		deleteMinTests();
 		
-		
 	}
+	
 	public static void deleteMinTests(){
 		FibonacciHeap fib = new FibonacciHeap();
 		fib.insert(14);
@@ -33,12 +33,24 @@ public class FibonacciHeap {
 		fib.insert(50);
 		fib.insert(19);
 		fib.printRootKeys();
+		contersRepTest(fib);
 		fib.deleteMin();
 		fib.printRootKeys();
+		contersRepTest(fib);
 		fib.deleteMin();
 		fib.printRootKeys();
+		contersRepTest(fib);
 		System.out.println("");
 		
+	}
+	private static void contersRepTest(FibonacciHeap fib) {
+		int[] countersRepArr = fib.countersRep();
+		for (int i = 0; i < countersRepArr.length; i++) {
+			System.out.print("Rank "+ i +": " + countersRepArr[i] + " tree(s)");
+			if (i!=countersRepArr.length-1)
+				System.out.print(", ");
+		}
+		System.out.println("");
 	}
 	public void printRootKeys(){
 		for(HeapNode node: this.trees){
@@ -268,7 +280,7 @@ public class FibonacciHeap {
 	 * 
 	 */
 	public int[] countersRep() {
-		int[] arr = new int[getMaxRank()];
+		int[] arr = new int[getMaxRank()+1];
 		for (HeapNode node : trees)
 			arr[node.getRank()] += 1;
 		return arr; // to be replaced by student code
