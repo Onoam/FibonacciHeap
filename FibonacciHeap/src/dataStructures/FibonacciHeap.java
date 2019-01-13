@@ -555,7 +555,10 @@ public class FibonacciHeap {
 		}
 		
 		public void unmark() {
-			this.mark = false;
+			if (this.isMarked()){
+				this.mark = false;
+				FibonacciHeap.increaseMarks(-1);
+			}
 			
 		}
 
