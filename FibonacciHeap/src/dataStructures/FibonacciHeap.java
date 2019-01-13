@@ -14,7 +14,6 @@ public class FibonacciHeap {
 	private static int marks;
 	private HeapNode min;
 	private int size;
-	private int numberOfTrees;//Roee: the size of the list trees
 	
 	public static void main(String[] args){ //TODO delete this method
 		System.out.println("project");
@@ -152,13 +151,17 @@ public class FibonacciHeap {
 		/*for(HeapNode node: this.trees){
 			System.out.print(node.getKey()+"("+node.getRank()+")"+"\t");
 		}*/
-		System.out.println("size:"+this.size+" minkey:"+this.min.getKey());
+		System.out.print("size:"+this.size+" minkey:");
+		if (this.findMin()==null)
+			System.out.println("null");
+		else
+			System.out.println(this.findMin().getKey());
 		//System.out.println("");
 		printHeap(this.trees, "");
 		System.out.println("");
 	}
 	
-	private static void printHeap(HeapList lst, String prefix) { // delete this
+	private static void printHeap(HeapList lst, String prefix) { // TODO delete this
 		for (HeapNode node : lst) {
 			System.out.print(" "+prefix+node.getKey()+"("+node.getRank()+")");
 			if (node.children.size()>0)
@@ -174,6 +177,8 @@ public class FibonacciHeap {
 	public FibonacciHeap(){
 		this.trees = new HeapList();
 		this.min = new HeapNode(Integer.MAX_VALUE);
+		marks = 0;
+		this.size = 0;
 	}
 	
 	/**
@@ -207,12 +212,15 @@ public class FibonacciHeap {
 		HeapNode newNode = new HeapNode(key);
 		newNode.setRank(0);
 		this.trees.add(newNode);
-		this.numberOfTrees++;
 		this.size++;
 		this.min=chooseTheSmallerNode(this.min,newNode);
 		
 		
 		return newNode;
+	}
+	
+	private int numberOfTrees() {
+		return this.trees.size();
 	}
 
 	/**
@@ -255,7 +263,6 @@ public class FibonacciHeap {
 		marks = 0;
 		this.size=0;
 		min = null;
-		this.numberOfTrees=0;
 	}
     /**slide 37
      * removing the minimal node from the list trees and upgrading it's list of children
@@ -275,7 +282,6 @@ public class FibonacciHeap {
     	}
     	this.min=null;
     	this.size--;
-    	this.numberOfTrees=this.numberOfTrees-1+numberOfChildren;
     	
     }
     public void successiveLinking(HeapNode[]Bins){
@@ -329,12 +335,10 @@ public class FibonacciHeap {
     	HeapNode tmpMin = new HeapNode(Integer.MAX_VALUE);
     	
     	this.trees = new HeapList();
-    	this.numberOfTrees=0;
     	for(int i=0;i<bins.length;i++){
     		if(bins[i]!=null){
     			bins[i].parent=null;
     			this.trees.add(bins[i]);
-    			numberOfTrees++;
     			if(searchForMin){
     				tmpMin=chooseTheSmallerNode(tmpMin,bins[i]);
     			}
@@ -483,7 +487,7 @@ public class FibonacciHeap {
 	 * plus twice the number of marked nodes in the heap.
 	 */
 	public int potential() {
-		return this.numberOfTrees+2*marks;
+		return this.numberOfTrees()+2*marks;
 	}
 
 	/**
