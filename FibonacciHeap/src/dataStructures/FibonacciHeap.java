@@ -15,165 +15,6 @@ public class FibonacciHeap {
 	private HeapNode min;
 	private int size;
 	
-	public static void main(String[] args){ //TODO delete this method
-		System.out.println("project");
-		//deleteMinTests();
-		generalTest();
-		//decreaseKeyTest();
-	}
-	
-	public static void decreaseKeyTest() { //TODO delete this method
-		FibonacciHeap fib = new FibonacciHeap();
-		fib.insert(14);
-		fib.insert(30);
-		fib.insert(5);
-		fib.insert(9);
-		fib.insert(3);
-		fib.insert(21);
-		fib.insert(50);
-		fib.insert(19);
-		fib.insert(1);
-		fib.insert(15);
-		fib.insert(11);
-		fib.insert(20);
-		fib.insert(34);
-		System.out.println("fib");
-		fib.printRootKeys();
-		fib.deleteMin();
-		fib.printRootKeys();
-		System.out.println(fib.findMin().children.first.getKey()+ "  "+ fib.findMin().getKey());
-		HeapNode todec = fib.findMin().children.first;
-		fib.decreaseKey(todec, 19); // decrease from 21 to 2
-		fib.printRootKeys(); // expected 3 in roots
-		HeapNode x11 = fib.findMin().getNext();
-		System.out.println("should be 11 " + x11.getKey());
-		HeapNode child = x11.children.first;
-		System.out.println(child.getKey());
-		fib.decreaseKey(child, 5);
-		fib.printRootKeys();
-		
-		//added by dvir
-		fib.decreaseKey(x11, 10); // check min update, should be 1
-		fib.printRootKeys();
-		HeapNode x14 = x11.getNext().children.first.getNext().children.first.getNext();
-		fib.decreaseKey(x14, 9); // check child=parent, decrease 14 to 5
-		fib.printRootKeys();
-		fib.decreaseKey(x14, 1); // decrease 5 to 4
-		fib.printRootKeys();
-	}
-	
-	public static void generalTest() { //TODO delete this method
-		FibonacciHeap fib = new FibonacciHeap();
-		System.out.println("fib");
-		System.out.println(fib.findMin()); // findMin returns null if heap is empty
-		fib.insert(14);
-		fib.insert(30);
-		fib.insert(5);
-		fib.insert(9);
-		fib.insert(3);
-		fib.insert(22);
-		fib.insert(50);
-		fib.insert(19);
-		fib.insert(21);
-		fib.insert(13);
-		fib.insert(7);
-		fib.printRootKeys();
-		
-		// countersRep with deleteMin test
-		System.out.println("---### countersRepAndDelMinTest ###---");
-		countersRepAndDelMinTest(fib);
-		
-		// meld test
-		System.out.println("---### Meld Test ###---");
-		FibonacciHeap fib2 = new FibonacciHeap();
-		fib2.insert(1);
-		fib2.insert(15);
-		fib2.insert(11);
-		fib2.insert(20);
-		fib2.insert(34);
-		fib2.deleteMin();
-		System.out.println("fib2");
-		fib2.printRootKeys();
-		printCountersRep(fib2);
-		System.out.println("");
-		fib.meld(fib2);
-		System.out.println("fib after meld");
-		fib.printRootKeys();
-		printCountersRep(fib);
-		
-		// decreaseKeyTest
-		System.out.println("");
-		System.out.println("---### decreaseKeyTest ###---");
-		decreaseKeyTest();
-	}
-	
-	public static void deleteMinTests(){ // TODO delete this
-		FibonacciHeap fib = new FibonacciHeap();
-		fib.insert(14);
-		fib.insert(30);
-		fib.insert(5);
-		fib.insert(9);
-		fib.insert(3);
-		fib.insert(21);
-		fib.insert(50);
-		fib.insert(19);
-		fib.printRootKeys();
-		fib.deleteMin();
-		fib.printRootKeys();
-		fib.deleteMin();
-		fib.printRootKeys();
-		System.out.println("");
-		
-	}
-	
-	private static void countersRepAndDelMinTest(FibonacciHeap fib) { // TODO delete this
-		printCountersRep(fib);
-		fib.deleteMin();
-		fib.printRootKeys();
-		printCountersRep(fib);
-		fib.deleteMin();
-		fib.printRootKeys();
-		printCountersRep(fib);
-		System.out.println("");
-	}
-	
-	private static void printCountersRep(FibonacciHeap fib) { // TODO delete this
-		int[] countersRepArr = fib.countersRep();
-		for (int i = 0; i < countersRepArr.length; i++) {
-			System.out.print("Rank "+ i +": " + countersRepArr[i] + " tree(s)");
-			if (i!=countersRepArr.length-1)
-				System.out.print(", ");
-		}
-		System.out.println("");
-	}
-	
-	public void printRootKeys(){ // TODO delete this
-		/*for(HeapNode node: this.trees){
-			System.out.print(node.getKey()+"("+node.getRank()+")"+"\t");
-		}*/
-		System.out.print("size:"+this.size+" minkey:");
-		if (this.findMin()==null)
-			System.out.println("null");
-		else
-			System.out.println(this.findMin().getKey());
-		//System.out.println("");
-		printHeap(this.trees, "");
-		System.out.println("");
-	}
-	
-	private static void printHeap(HeapList lst, String prefix) { // TODO delete this
-		for (HeapNode node : lst) {
-			System.out.print(" "+prefix+node.getKey()+"("+node.getRank()+")");
-			if (node.children.size()>0)
-			{
-				System.out.println("");
-				printHeap(node.children, prefix+"--");
-			}
-			else
-				System.out.println("");
-		}
-	}
-	
 	public FibonacciHeap(){
 		this.trees = new HeapList();
 		this.min = new HeapNode(Integer.MAX_VALUE);
@@ -210,7 +51,6 @@ public class FibonacciHeap {
 	 */
 	public HeapNode insert(int key) {
 		HeapNode newNode = new HeapNode(key);
-		newNode.setRank(0);
 		this.trees.add(newNode);
 		this.size++;
 		this.min=chooseTheSmallerNode(this.min,newNode);
@@ -240,8 +80,6 @@ public class FibonacciHeap {
     		return;
     	}
     	removeMinNodeAndUpgradeItsChildren();
-    	
-    	//this.printRootKeys();
     	
     	//##part II
     	double boundingRatio=1.4404;
@@ -274,7 +112,6 @@ public class FibonacciHeap {
     	
     	HeapNode minNode = this.min;
     	
-    	int numberOfChildren = minNode.children.size();
     	this.trees.remove(minNode);
     	for(HeapNode child :minNode.children){
     		child.parent=null;
@@ -318,14 +155,8 @@ public class FibonacciHeap {
     		 smallRoot=root2;
     		 bigRoot=root1;
     	}
-    	/*
-    	 * needed only if we link to withing the successive linking proccess:
-    	this.trees.remove(bigRoot);
-    	this.numberOfTrees--;
-    	*/
     	smallRoot.children.add(bigRoot);
     	bigRoot.parent=smallRoot;
-    	smallRoot.setRank(smallRoot.getRank() + 1);
     	totalLinks++;
     	return smallRoot;
     }
@@ -427,7 +258,7 @@ public class FibonacciHeap {
 	 * public void delete(HeapNode x)
 	 *
 	 * Deletes the node x from the heap.
-	 * TODO should probably implement this with decreaseKey+deleteMin
+	 * should probably implement this with decreaseKey+deleteMin
 	 */
 	public void delete(HeapNode x) {
 		this.decreaseKey(x,x.key-(this.min.key-1));
@@ -535,17 +366,15 @@ public class FibonacciHeap {
 	 */
 	public class HeapNode {
 		private HeapNode parent;
-		private int rank = 0; // Dead field, getRank() returns children.size();
 		private HeapList children;
 		private HeapNode next;
 		private HeapNode prev;
-		public int key; // TODO Why is this public
+		public int key;
 		private boolean mark;
 		
 		public HeapNode(int key, HeapList children, boolean mark, HeapNode next, HeapNode prev) {
 			this.key = key;
 			this.children = children;
-			this.setRank(children.size());
 			this.next = next;
 			this.prev = prev;
 		}
@@ -634,10 +463,6 @@ public class FibonacciHeap {
 		
 		private void setPrev(HeapNode prev) {
 			this.prev = prev;
-		}
-
-		private void setRank(int rank) {
-			this.rank = rank;
 		}
 	}
 	/**
