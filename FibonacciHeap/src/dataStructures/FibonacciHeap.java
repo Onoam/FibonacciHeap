@@ -1,4 +1,4 @@
-//package FibonacciHeap;
+package dataStructures;
 
 import java.util.Iterator;
 
@@ -25,7 +25,7 @@ public class FibonacciHeap {
 	/**
 	 * increase marks of the Heap
 	 * used for potential function
-	 * @param i
+	 * @param i how much to increase by
 	 */
 	private static void increaseMarks(int i) {
 		marks += i;
@@ -59,6 +59,11 @@ public class FibonacciHeap {
 		return newNode;
 	}
 	
+	
+	/**
+	 * Returns number of trees in the root list of the heap
+	 * @return number of trees in root list
+	 */
 	private int numberOfTrees() {
 		return this.trees.size();
 	}
@@ -295,7 +300,10 @@ public class FibonacciHeap {
 			this.min = x;
 		}
 	}
-	
+	/**
+	 * performs cascading cuts operation recursively
+	 * @param y the node from which to start the cascading cuts
+	 */
 	private void cascadingCuts(HeapNode y) {
 		HeapNode z = y.getParent();
 		if (z != null) {
@@ -363,7 +371,10 @@ public class FibonacciHeap {
 	public static int totalCuts() {
 		return totalCuts; // should be replaced by student code
 	}
-
+	/**
+	 * increases the number of cuts performed on the heap
+	 * @param i - number of cuts to add
+	 */
 	public static void increaseCuts(int i) {
 		totalCuts += i;
 	}
@@ -413,7 +424,7 @@ public class FibonacciHeap {
 		
 		/**
 		 * check if node is marked, for cascading cuts
-		 * @return
+		 * @return true iff node has been marked
 		 */
 		public boolean isMarked() {
 			return mark;
