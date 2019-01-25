@@ -1,4 +1,4 @@
-package dataStructures;
+//package FibonacciHeap;
 
 import java.util.Iterator;
 
@@ -95,6 +95,7 @@ public class FibonacciHeap {
     	
     }
 	
+	/**emptying the list**/
 	public void emptyTheHeap(){
 		
 		this.trees = new HeapList();
@@ -102,10 +103,10 @@ public class FibonacciHeap {
 		this.size=0;
 		min = null;
 	}
-    /**slide 37
-     * removing the minimal node from the list trees and upgrading it's list of children
-     * to be new roots
-     * Notice!: the field min becomes null after calling thing function
+    /**slide 37-38
+     * removing the minimal root node from the list trees and upgrading it's list of
+     * first children  to be new roots
+     * Notice!: the field min becomes null after calling this function
      * **/
     public void removeMinNodeAndUpgradeItsChildren(){
     	
@@ -121,12 +122,18 @@ public class FibonacciHeap {
     	this.size--;
     	
     }
+    /**Commit successive linking to the roots in  this.trees in the array
+     * HeapNode[]Bins - according to slides 38-47 **/
     public void successiveLinking(HeapNode[]Bins){
     	for(HeapNode root:this.trees){
     		continuousAddition(Bins,root,root.getRank());
     		
     	}
     }
+    /**insert root in Bins[index]
+     * if the bin Bins[index] has a root in it the function will link the 2 trees
+     * and will continue the successive linking as described in slides 38-47 in the
+     * next bins (much like binary addition)**/
     public void continuousAddition(HeapNode[]Bins,HeapNode root,int index){
     	if(Bins[index]==null){
     		Bins[index]=root;
@@ -160,6 +167,9 @@ public class FibonacciHeap {
     	totalLinks++;
     	return smallRoot;
     }
+    /**updating the list this.trees to have the trees in the array bins
+     * while looping over the roots of the heap, the method maintain and
+     * update this.min**/
     public void UpdateNewRootsAndMinNode(HeapNode[] bins){
     	
     	boolean searchForMin=this.min==null;
@@ -180,6 +190,7 @@ public class FibonacciHeap {
     	}
     	
     }
+    /**returns the node who has the smaller key among a,b**/
     public HeapNode chooseTheSmallerNode(HeapNode a,HeapNode b){
     	if(a.key<=b.key){
     		return a;
