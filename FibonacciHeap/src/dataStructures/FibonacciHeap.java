@@ -25,7 +25,7 @@ public class FibonacciHeap {
 	/**
 	 * increase marks of the Heap
 	 * used for potential function
-	 * @param i
+	 * @param i how much to increase by
 	 */
 	private static void increaseMarks(int i) {
 		marks += i;
@@ -59,6 +59,11 @@ public class FibonacciHeap {
 		return newNode;
 	}
 	
+	
+	/**
+	 * Returns number of trees in the root list of the heap
+	 * @return number of trees in root list
+	 */
 	private int numberOfTrees() {
 		return this.trees.size();
 	}
@@ -95,6 +100,7 @@ public class FibonacciHeap {
     	
     }
 	
+	/**emptying the list**/
 	public void emptyTheHeap(){
 		
 		this.trees = new HeapList();
@@ -102,10 +108,10 @@ public class FibonacciHeap {
 		this.size=0;
 		min = null;
 	}
-    /**slide 37
-     * removing the minimal node from the list trees and upgrading it's list of children
-     * to be new roots
-     * Notice!: the field min becomes null after calling thing function
+    /**slide 37-38
+     * removing the minimal root node from the list trees and upgrading it's list of
+     * first children  to be new roots
+     * Notice!: the field min becomes null after calling this function
      * **/
     public void removeMinNodeAndUpgradeItsChildren(){
     	
@@ -121,12 +127,18 @@ public class FibonacciHeap {
     	this.size--;
     	
     }
+    /**Commit successive linking to the roots in  this.trees in the array
+     * HeapNode[]Bins - according to slides 38-47 **/
     public void successiveLinking(HeapNode[]Bins){
     	for(HeapNode root:this.trees){
     		continuousAddition(Bins,root,root.getRank());
     		
     	}
     }
+    /**insert root in Bins[index]
+     * if the bin Bins[index] has a root in it the function will link the 2 trees
+     * and will continue the successive linking as described in slides 38-47 in the
+     * next bins (much like binary addition)**/
     public void continuousAddition(HeapNode[]Bins,HeapNode root,int index){
     	if(Bins[index]==null){
     		Bins[index]=root;
@@ -160,6 +172,9 @@ public class FibonacciHeap {
     	totalLinks++;
     	return smallRoot;
     }
+    /**updating the list this.trees to have the trees in the array bins
+     * while looping over the roots of the heap, the method maintain and
+     * update this.min**/
     public void UpdateNewRootsAndMinNode(HeapNode[] bins){
     	
     	boolean searchForMin=this.min==null;
@@ -180,6 +195,7 @@ public class FibonacciHeap {
     	}
     	
     }
+    /**returns the node who has the smaller key among a,b**/
     public HeapNode chooseTheSmallerNode(HeapNode a,HeapNode b){
     	if(a.key<=b.key){
     		return a;
@@ -284,7 +300,10 @@ public class FibonacciHeap {
 			this.min = x;
 		}
 	}
-	
+	/**
+	 * performs cascading cuts operation recursively
+	 * @param y the node from which to start the cascading cuts
+	 */
 	private void cascadingCuts(HeapNode y) {
 		HeapNode z = y.getParent();
 		if (z != null) {
@@ -352,7 +371,10 @@ public class FibonacciHeap {
 	public static int totalCuts() {
 		return totalCuts; // should be replaced by student code
 	}
-
+	/**
+	 * increases the number of cuts performed on the heap
+	 * @param i - number of cuts to add
+	 */
 	public static void increaseCuts(int i) {
 		totalCuts += i;
 	}
@@ -402,7 +424,7 @@ public class FibonacciHeap {
 		
 		/**
 		 * check if node is marked, for cascading cuts
-		 * @return
+		 * @return true iff node has been marked
 		 */
 		public boolean isMarked() {
 			return mark;
